@@ -13,7 +13,7 @@ function ImageUpload({ user }) {
     const [finalUploader, setFinalUploader] = useState(null);
     const [directImageUrl, setDirectImageUrl] = useState("");
     const [DisplayImages, setDisplayImages] = useState(null);
-
+//Initializing Useing Dropzone module
     const { getRootProps, getInputProps } = useDropzone({
         accept: ".jpg,.jpeg,.png,.gif,.apng,.tiff,.tif,.bmp,.xcf,.webp,.mp4,.mov,.avi,.webm,.ogg",
         onDrop: (acceptedFiles) => {
@@ -26,7 +26,7 @@ function ImageUpload({ user }) {
             )
         },
     })
-
+//React Hooks is used for checking the image is added via "DnD portion" or from "File Input Tag".
     let dragImage = files[0];
     useEffect(() => {
         if (dragImage !== undefined) {
@@ -38,7 +38,7 @@ function ImageUpload({ user }) {
             setDirectImageUrl("");
         }
     }, [image, dragImage])
-
+//React Hooks is used for checking and assigning the "display Preview" the image based on "Direct Url ading" or "Used a stored image from Firestore".
     useEffect(() => {
         if (directImageUrl !== "") {
             setDisplayImages
@@ -62,22 +62,25 @@ function ImageUpload({ user }) {
                 )
         }
     }, [directImageUrl, dragImage, files])
-
-    const handleChange = (e) => {
+//handleImageUploadviaInputButton is responsible for adding the file which is added by "Input Button" in the que for upload in firestore.
+    const handleImageUploadviaInputButton = (e) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0]);
         }
     }
-
+//handleDirectImageUrl is responsible for adding the respective image in the que for bypass the firestore and directly added in database.
     let handleDirectImageUrl = (event) => {
         setDirectImageUrl(event.target.value);
         setFinalUploader(null);
     }
-
+//handleUpload is handleing the post submisssion in the DataBase.
     const handleUpload = () => {
+        //defensive coding style : if all fields are empty, shot a alert.
         if (finalUploader === null && directImageUrl === "") {
             alert("Please choose a Image/Video or paste direcet URL for submiting");
-        } else if (directImageUrl !== "") {
+        } 
+        //bypass the firestore storing and added the post directly in DataBase.
+        else if (directImageUrl !== "") {
             db.collection("posts").add({
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 caption: caption,
@@ -88,7 +91,9 @@ function ImageUpload({ user }) {
             setCaption("");
             setDirectImageUrl("");
             setDisplayImages(null);
-        } else {
+        } 
+        //handle all action, first store the media in firestore then uplode the post in database.
+        else {
             const uploadTask = storage.ref(`images/${finalUploader.name}`).put(finalUploader);
 
             uploadTask.on(
@@ -139,7 +144,7 @@ function ImageUpload({ user }) {
             </div>
             <div className="posting">
                 <p>
-                    <input id="file-input" type="file" name="files" multiple="" accept=".jpg,.jpeg,.png,.gif,.apng,.tiff,.tif,.bmp,.xcf,.webp,.mp4,.mov,.avi,.webm" onChange={handleChange} />
+                    <input id="file-input" type="file" name="files" multiple="" accept=".jpg,.jpeg,.png,.gif,.apng,.tiff,.tif,.bmp,.xcf,.webp,.mp4,.mov,.avi,.webm" onChange={handleImageUploadviaInputButton} />
                 </p>
                 <input type="text" id="imageUrl" placeholder="Paste the image URL/link here directly" onChange={handleDirectImageUrl} value={directImageUrl} />
                 <input type="text" placeholder="Enter a caption..." onChange={event => setCaption(event.target.value)} value={caption} />

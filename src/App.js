@@ -7,6 +7,7 @@ import './App.css';
 import Post from './Post';
 import Uploader from './uploader';
 
+//For adding and styleing custom MODAL using @material-ui
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
 }));
+//============================================================
+
+
 
 function App() {
   const classes = useStyles();
@@ -76,7 +80,7 @@ function App() {
     }
   }, [user, username]);
 
-  // Firebase DB 
+  // Firebase DB connectivity
   useEffect(() => {
     db.collection('posts').orderBy("timestamp", "desc").onSnapshot(snapshot => {
       setPosts(snapshot.docs.map(doc => ({
@@ -113,6 +117,9 @@ function App() {
     setOpenSignIn(false);
 
   }
+
+
+  
   return (
     <div className="App">
       <Modal

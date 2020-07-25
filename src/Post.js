@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import './Post.css';    
 import { db } from './firebase'
-
 import Avatar from "@material-ui/core/Avatar";
+import './Post.css';
 
 
 function Post({ username, user, caption, imageUrl, postId, votes }) {
 
-    const checkVideo = (imageUrl.match(/\.([^.]*?)(?=\?|#|$)/) || [])[1];
+    const isVideoFormat = (imageUrl.match(/\.([^.]*?)(?=\?|#|$)/) || [])[1];
     const [voter, setVoter] = useState(false);
 
+
+    //use Effect hooks used for check and assigning the voter value
     useEffect(() => {
         if (user) {
             // eslint-disable-next-line array-callback-return
@@ -23,49 +24,56 @@ function Post({ username, user, caption, imageUrl, postId, votes }) {
         }
     }, [voter, user, votes])
 
+    // handleVote method deals with the voting option on every post.
     const handleVote = () => {
         let postReference = db
-                            .collection("posts")
-                            .doc(postId)
-                            .get();
+            .collection("posts")
+            .doc(postId)
+            .get();
+        //Validation If the user is already voted then remove the vote.
         if (voter) {
             postReference
                 .then((doc) => {
-                        let voteUpdate = doc.data().vote;
-                        voteUpdate = voteUpdate.filter(item => item !== user.displayName )
-                        console.log(voteUpdate);
-                        db.collection("posts").doc(postId).update({
-                            vote: voteUpdate
-                        })
+                    let voteUpdate = doc.data().vote;
+                    voteUpdate = voteUpdate.filter(item => item !== user.displayName)
+                    console.log(voteUpdate);
+                    db.collection("posts").doc(postId).update({
+                        vote: voteUpdate
+                    })
                 })
                 .catch((error) => {
                     console.log("Error getting document:", error);
                 });
-                setVoter(false);
-
-        } else {
+            setVoter(false);
+        }
+        //Validation If the user is not already voted then Add the vote.  
+        else {
             postReference
                 .then((doc) => {
-                        let voteUpdate = doc.data().vote;
-                        voteUpdate.push(user.displayName);
-                        console.log(voteUpdate);
-                        db.collection("posts").doc(postId).update({
-                            vote: voteUpdate
-                        })
+                    let voteUpdate = doc.data().vote;
+                    voteUpdate.push(user.displayName);
+                    console.log(voteUpdate);
+                    db.collection("posts").doc(postId).update({
+                        vote: voteUpdate
+                    })
                 })
                 .catch((error) => {
                     console.log("Error getting document:", error);
                 });
-                setVoter(true);
+            setVoter(true);
         }
     }
+    // handleShare method deals with the link copying option for sharing.
     const handleShare = () => {
         navigator.clipboard.writeText(imageUrl);
         alert("🎗️🎗️🎗️ link copied for shareing 🎗️🎗️🎗️");
     }
+
+
+
     return (
         <div className="post">
-            <div className="post__media"> {(checkVideo === "mp4") || (checkVideo === "ogg") ? <video autoPlay loop muted><source src={imageUrl} type="video/mp4" />your browser does not support video</video> : <img src={imageUrl} loading='lazy' alt="" />} </div>
+            <div className="post__media"> {(isVideoFormat === "mp4") || (isVideoFormat === "ogg") || (isVideoFormat === "avi")? <video autoPlay loop muted><source src={imageUrl} type="video/mp4" />your browser does not support video</video> : <img src={imageUrl} loading='lazy' alt="" />} </div>
             <div className="post__meta">
                 <Avatar
                     className="post__avatar"
@@ -79,9 +87,9 @@ function Post({ username, user, caption, imageUrl, postId, votes }) {
                 <div className="post__effects">
                     <div className="vote__Temp"> <button disabled={!user} onClick={handleVote}> {voter ? <span role="img" aria-label="Vote"> 👎 </span> : <span role="img" aria-label="Vote"> 👍 </span>} </button> {votes.length} </div>
                     <button id="share__Post" onClick={handleShare}> <span role="img" aria-label="Comments">🔗</span> </button>
-                    <button disabled> <span role="img" aria-label="View">👁 0</span> </button>
-                    <button disabled> <span role="img" aria-label="Comments">💬 0</span> </button>
-                    
+                    <button className="disabled__button" disabled> <span role="img" aria-label="View">👁 0</span> </button>
+                    <button className="disabled__button" disabled> <span role="img" aria-label="Comments">💬 0</span> </button>
+
                 </div>
             </div>
         </div>
@@ -89,7 +97,3 @@ function Post({ username, user, caption, imageUrl, postId, votes }) {
 }
 
 export default Post
-
-
-
-// <button disabled={!user} onClick={() => alert("thumps-Down  Clicked")}> <span role="img" aria-label="Thumps-Down">👎</span> </button>
