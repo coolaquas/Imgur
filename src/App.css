@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+}
+
+/* .app__canvas {
+    position: absolute;
+    height: 25%;
+    width: 100%;
+    padding: 20px;
+    z-index: -1 ;
+    background: url(https://media1.giphy.com/media/xTiTnI1mdyxsFKTFjW/200w.webp?cid=ecf05e47nfebzj2ityzp42je7nzy428u8m1wql4cuf3cqvyo&rid=200w.webp);
+}   */
+
+.app__header{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.app__headerImage {
+    max-width: 50%;
+    max-height: 30%;
+    object-fit: contain;
+}
+
+.app__signup {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.clr{
+    background-color: #1c3373;;
+}
+
+.imgur{
+    font-size: xx-large ;
+    color: white;
+    font-weight: bolder;
+    font-family: "Lucida Console", Courier, monospace;
+
+}
+
+.addbtn {
+
+margin-left: 20px;
+
+
+}
+
+.h{
+    color: navy;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 20px;
+
+}
+
+.signin{
+    background-color: #00000000;
+    color: white;
+    margin-right: 10px;
+    text-shadow: 0 14px 15px rgba(27,28,30,.31);
+    white-space: nowrap;
+    vertical-align: middle;
+    border: none;
+}
+.signin:hover{
+    background-color: #0000003b;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.searchs {
+    text-align: left;
+    margin-left: 200px;
+    background-color: #1c3373;
+}
+
+.app__usernameDisplay{
+    margin-right: 10px;
+    color: #fff;
+}
+.post__container{
+    margin: 5%;
+    width: 90%;
+    columns: 4;
+    column-gap: 20px;
+}
+
+@media (max-width: 1200px)
+{
+    .post__container{
+        margin: 4%;
+        columns: 3;
+        width: calc(100%-20px);
+        box-sizing: border-box;
+        padding: 10px 10px 10px 0;
+    }
+}
+@media (max-width: 768px)
+{
+    .post__container{
+        margin: 3%;
+        columns: 2;
+    }
+}
+@media (max-width: 480px)
+{
+    .post__container{
+        margin: 2%;
+        columns: 1;
+    }
+}
